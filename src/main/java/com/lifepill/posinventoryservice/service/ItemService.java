@@ -22,5 +22,8 @@ public interface ItemService {
     PaginatedResponseItemDTO getItemByStockStatusWithPaginateed(boolean activeStatus, int page, int size);
 
     List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode);
+
+    List<ItemGetResponseDTO> getItemById(int itemId);
+
 //    List<ItemGetResponseDTO> getAllItems();
 }

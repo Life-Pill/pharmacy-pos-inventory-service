@@ -62,6 +62,14 @@ public class ItemController {
         return itemDTOS;
     }
 
+    @GetMapping(path = "/get-by-item-id", params = "itemId")
+    public List<ItemGetResponseDTO> getItemById(@RequestParam(value = "itemId") int itemId) {
+        List<ItemGetResponseDTO> itemDTOS = itemService.getItemById(itemId);
+        return itemDTOS;
+    }
+
+
+
     // Not fully implement (not work)
     @GetMapping(path = "/get-by-name-with-mapstruct", params = "name")
     public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(@RequestParam(value = "name") String itemName) {

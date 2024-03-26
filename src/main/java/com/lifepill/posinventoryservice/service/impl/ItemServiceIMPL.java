@@ -128,6 +128,20 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    @Override
+    public List<ItemGetResponseDTO> getItemById(int itemId) {
+        List<Item> item = itemRepo.findAllByItemIdEquals(itemId);
+        if(!item.isEmpty()){
+            List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
+                    item,
+                    new TypeToken<List<ItemGetResponseDTO>>(){}.getType()
+            );
+            return itemGetResponseDTOS;
+        }else{
+            throw new NotFoundException("No any item found for that id");
+        }
+    }
+
 
     @Override
     public String updateItem(ItemUpdateDTO itemUpdateDTO) {
