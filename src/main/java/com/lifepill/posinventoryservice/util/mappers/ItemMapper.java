@@ -2,7 +2,6 @@ package com.lifepill.posinventoryservice.util.mappers;
 
 import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetResponseDTO;
-import com.lifepill.posinventoryservice.entity.Item;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 

@@ -1,25 +1,30 @@
 package com.lifepill.posinventoryservice.entity;
 
-
 import com.lifepill.posinventoryservice.entity.enums.MeasuringUnitType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.Set;
 
+/**
+ * The type Item.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Setter
+@Getter
 @Entity
+@Builder
 @Table(name = "item")
 public class Item {
 
     @Id
     @Column(name = "item_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int itemId;
+    private long itemId;
 
     @Column(name = "item_name", length = 100, nullable = false)
     private String itemName;
@@ -47,9 +52,6 @@ public class Item {
 
     @Column(name = "item_quantity", nullable = false)
     private double itemQuantity;
-
-    @Column(name = "item_category", length = 100, nullable = false)
-    private String itemCategory;
 
     @Column(name = "is_stock", columnDefinition = "BOOLEAN default false")
     private boolean stock;;
@@ -91,14 +93,29 @@ public class Item {
     @Column(name = "item_description", length = 100)
     private String itemDescription;
 
+    @Column(name="date_created")
+    @CreationTimestamp
+    private Date dateCreated;
 
-//    // change to out of stock or not
-//    @Column(name = "active_status", columnDefinition = "BOOLEAN default false")
-//    private boolean activeStatus;
-
+    @Column(name="last_updated_date")
+    @UpdateTimestamp
+    private Date lastUpdatedDate;
 
 //    @OneToMany(mappedBy = "items")
 //    private Set<OrderDetails> orderDetails;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private ItemCategory itemCategory;
 
+
+    @Column(name= "supplier_id")
+    private long supplierId;
+
+    // branch id
+    @Column(name = "branch_id")
+    private long branchId;
+
+//    @ManyToMany(mappedBy = "items")
+//    private Set<Branch> branches;
 }
