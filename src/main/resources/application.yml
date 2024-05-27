@@ -5,7 +5,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/inventory-microservice
     username: postgres
-    password: Prami@3990
+
 
   jpa:
     hibernate:
@@ -18,7 +18,7 @@ spring:
   security:
     user:
       name: lifepill
-      password: 12345
+
 
   mvc:
     pathmatch:
