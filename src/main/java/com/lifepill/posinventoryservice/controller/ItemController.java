@@ -57,7 +57,7 @@ public class ItemController {
         String message = itemService.saveItems(itemSaveRequestDTO);
 
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(201, "Success", message),
+                new StandardResponse(201, message, itemSaveRequestDTO),
                 HttpStatus.CREATED);
     }
 

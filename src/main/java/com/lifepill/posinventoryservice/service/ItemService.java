@@ -16,6 +16,14 @@ public interface ItemService {
 
     String saveItems(ItemSaveRequestDTO itemSaveRequestDTO);
 
+    String saveCategory(ItemCategoryDTO categoryDTO);
+
+    List<ItemCategoryDTO> getAllCategories();
+
+    String updateCategoryDetails(long categoryId, ItemCategoryDTO categoryDTO);
+
+    String deleteCategory(long categoryId);
+
    /* List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName);
 
     List<ItemGetResponseDTO> getItemByName(String itemName);

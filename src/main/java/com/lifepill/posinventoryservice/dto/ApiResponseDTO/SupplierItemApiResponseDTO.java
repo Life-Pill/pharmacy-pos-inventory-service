@@ -1,7 +1,8 @@
 package com.lifepill.posinventoryservice.dto.ApiResponseDTO;
 
-import com.lifepill.possystem.dto.SupplierAndSupplierCompanyDTO;
-import com.lifepill.possystem.dto.responseDTO.ItemGetIdResponseDTO;
+
+import com.lifepill.posinventoryservice.dto.SupplierAndSupplierCompanyDTO;
+import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetIdResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

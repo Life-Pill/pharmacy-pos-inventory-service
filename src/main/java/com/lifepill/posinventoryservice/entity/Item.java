@@ -112,7 +112,6 @@ public class Item {
     @Column(name= "supplier_id")
     private long supplierId;
 
-    // branch id
     @Column(name = "branch_id")
     private long branchId;
 

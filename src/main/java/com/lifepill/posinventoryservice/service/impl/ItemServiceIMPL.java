@@ -59,9 +59,11 @@ public class ItemServiceIMPL implements ItemService {
                         + itemSaveRequestDTO.getCategoryId())
                 );
 
-        // TODO:Check if branch is exist is not
+        item.setItemCategory(category); // Ensure item category is set
 
-        //TODO : Check if supplier is exist or not
+        // TODO: Check if branch exists
+
+        // TODO: Check if supplier exists
 
         if (!itemRepository.existsById(item.getItemId())) {
             itemRepository.save(item);
@@ -70,8 +72,9 @@ public class ItemServiceIMPL implements ItemService {
             throw new EntityDuplicationException("Already added this Id item");
         }
     }
-/*
-    *//**
+
+    /*
+     *//**
      * Retrieves all items from the database.
      *
      * @return A list of DTOs representing all items.
@@ -296,19 +299,7 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
-    *//**
-     * Saves a new item category.
-     *
-     * @param categoryDTO The DTO containing the details of the category to be saved.
-     * @return A message indicating the success of the save operation.
-     *//*
-    @Override
-    public String saveCategory(ItemCategoryDTO categoryDTO) {
-        // Convert DTO to entity and save the category
-        ItemCategory category = modelMapper.map(categoryDTO, ItemCategory.class);
-        itemCategoryRepository.save(category);
-        return "Category saved successfully";
-    }
+
 
     *//**
      * Saves an item with its associated category and supplier.
@@ -364,80 +355,7 @@ public class ItemServiceIMPL implements ItemService {
         //TODO: Need to get response of real item id now it shows in zero
     }
 
-    *//**
-     * Retrieves all item categories.
-     *
-     * @return A list of DTOs representing all item categories.
-     * @throws NotFoundException If no categories are found.
-     *//*
-    @Override
-    public List<ItemCategoryDTO> getAllCategories() {
-        List<ItemCategory> categories = itemCategoryRepository.findAll();
-        if (!categories.isEmpty()) {
-            return categories.stream()
-                    .map(category -> modelMapper.map(category, ItemCategoryDTO.class))
-                    .collect(Collectors.toList());
-        } else {
-            throw new NotFoundException("No categories found");
-        }
-    }
 
-    *//**
-     * Updates the details of an existing item category.
-     *
-     * @param categoryId The ID of the category to be updated.
-     * @param categoryDTO The DTO containing the updated details of the category.
-     * @return A message indicating the success of the update operation.
-     * @throws NotFoundException If the category to be updated is not found.
-     *//*
-    @Override
-    public String updateCategoryDetails(long categoryId, ItemCategoryDTO categoryDTO) {
-        // Check if the category exists
-        Optional<ItemCategory> optionalCategory = itemCategoryRepository.findById(categoryId);
-        if (optionalCategory.isPresent()) {
-            ItemCategory category = optionalCategory.get();
-
-            // Update category details
-            category.setCategoryName(categoryDTO.getCategoryName());
-            category.setCategoryDescription(categoryDTO.getCategoryDescription());
-            category.setCategoryImage(categoryDTO.getCategoryImage());
-
-            // Save the updated category
-            itemCategoryRepository.save(category);
-
-            return "Category details updated successfully";
-        } else {
-            throw new NotFoundException("Category not found");
-        }
-    }
-
-    *//**
-     * Deletes a category with the specified ID.
-     *
-     * @param categoryId The ID of the category to be deleted.
-     * @return A message indicating the success of the delete operation.
-     * @throws NotFoundException If the category to be deleted is not found.
-     *//*
-    @Override
-    public String deleteCategory(long categoryId) {
-        // Check if the category exists
-        Optional<ItemCategory> optionalCategory = itemCategoryRepository.findById(categoryId);
-        if (optionalCategory.isPresent()) {
-            ItemCategory category = optionalCategory.get();
-
-            // Check if there are any items associated with this category
-            if (!category.getItems().isEmpty()) {
-                throw new IllegalStateException("Cannot delete category with associated items");
-            }
-
-            // Delete the category
-            itemCategoryRepository.delete(category);
-
-            return "Category deleted successfully";
-        } else {
-            throw new NotFoundException("Category not found");
-        }
-    }
 
     @Override
     public SupplierItemApiResponseDTO getAllDetailsItemById(long itemId) {
@@ -506,4 +424,93 @@ public class ItemServiceIMPL implements ItemService {
 
         return itemGetResponsewithoutSupplierDetailsDTO;
     }*/
+
+    /**
+     * Saves a new item category.
+     *
+     * @param categoryDTO The DTO containing the details of the category to be saved.
+     * @return A message indicating the success of the save operation.
+     */
+    @Override
+    public String saveCategory(ItemCategoryDTO categoryDTO) {
+        // Convert DTO to entity and save the category
+        ItemCategory category = modelMapper.map(categoryDTO, ItemCategory.class);
+        itemCategoryRepository.save(category);
+        return "Category saved successfully";
+    }
+
+    /**
+     * Retrieves all item categories.
+     *
+     * @return A list of DTOs representing all item categories.
+     * @throws NotFoundException If no categories are found.
+     */
+    @Override
+    public List<ItemCategoryDTO> getAllCategories() {
+        List<ItemCategory> categories = itemCategoryRepository.findAll();
+        if (!categories.isEmpty()) {
+            return categories.stream()
+                    .map(category -> modelMapper.map(category, ItemCategoryDTO.class))
+                    .collect(Collectors.toList());
+        } else {
+            throw new NotFoundException("No categories found");
+        }
+    }
+
+    /**
+     * Updates the details of an existing item category.
+     *
+     * @param categoryId  The ID of the category to be updated.
+     * @param categoryDTO The DTO containing the updated details of the category.
+     * @return A message indicating the success of the update operation.
+     * @throws NotFoundException If the category to be updated is not found.
+     */
+    @Override
+    public String updateCategoryDetails(long categoryId, ItemCategoryDTO categoryDTO) {
+        // Check if the category exists
+        Optional<ItemCategory> optionalCategory = itemCategoryRepository.findById(categoryId);
+        if (optionalCategory.isPresent()) {
+            ItemCategory category = optionalCategory.get();
+
+            // Update category details
+            category.setCategoryName(categoryDTO.getCategoryName());
+            category.setCategoryDescription(categoryDTO.getCategoryDescription());
+            category.setCategoryImage(categoryDTO.getCategoryImage());
+
+            // Save the updated category
+            itemCategoryRepository.save(category);
+
+            return "Category details updated successfully";
+        } else {
+            throw new NotFoundException("Category not found");
+        }
+    }
+
+    /**
+     * Deletes a category with the specified ID.
+     *
+     * @param categoryId The ID of the category to be deleted.
+     * @return A message indicating the success of the delete operation.
+     * @throws NotFoundException If the category to be deleted is not found.
+     */
+    @Override
+    public String deleteCategory(long categoryId) {
+        // Check if the category exists
+        Optional<ItemCategory> optionalCategory = itemCategoryRepository.findById(categoryId);
+        if (optionalCategory.isPresent()) {
+            ItemCategory category = optionalCategory.get();
+
+            // Check if there are any items associated with this category
+            if (!category.getItems().isEmpty()) {
+                throw new IllegalStateException("Cannot delete category with associated items");
+            }
+
+            // Delete the category
+            itemCategoryRepository.delete(category);
+
+            return "Category deleted successfully";
+        } else {
+            throw new NotFoundException("Category not found");
+        }
+    }
 }

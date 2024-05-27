@@ -1,6 +1,6 @@
 package com.lifepill.posinventoryservice.dto.responseDTO;
 
-import com.lifepill.possystem.dto.ItemCategoryDTO;
+import com.lifepill.posinventoryservice.dto.ItemCategoryDTO;
 import lombok.*;
 
 
