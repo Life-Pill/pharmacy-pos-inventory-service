@@ -1,34 +1,25 @@
 package com.lifepill.posinventoryservice.service.impl;
 
-import com.lifepill.posinventoryservice.dto.ApiResponseDTO.SupplierItemApiResponseDTO;
 import com.lifepill.posinventoryservice.dto.ItemCategoryDTO;
-import com.lifepill.posinventoryservice.dto.SupplierAndSupplierCompanyDTO;
-import com.lifepill.posinventoryservice.dto.paginated.PaginatedResponseItemDTO;
-import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestDTO;
-import com.lifepill.posinventoryservice.dto.requestDTO.ItemUpdateDTO;
-import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetAllResponseDTO;
-import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetIdResponseDTO;
-import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetResponseDTO;
-import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetResponseWithoutSupplierDetailsDTO;
 import com.lifepill.posinventoryservice.entity.Item;
 import com.lifepill.posinventoryservice.entity.ItemCategory;
 import com.lifepill.posinventoryservice.exception.EntityDuplicationException;
 import com.lifepill.posinventoryservice.exception.NotFoundException;
 import com.lifepill.posinventoryservice.repository.ItemCategoryRepository;
 import com.lifepill.posinventoryservice.repository.ItemRepository;
-import com.lifepill.posinventoryservice.service.APIClient;
+import com.lifepill.posinventoryservice.service.APIClient.APIClientSupplierService;
+import com.lifepill.posinventoryservice.service.APIClient.APIClientBranchService;
 import com.lifepill.posinventoryservice.service.ItemService;
+import com.lifepill.posinventoryservice.util.StandardResponse;
 import com.lifepill.posinventoryservice.util.mappers.ItemMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,7 +31,8 @@ public class ItemServiceIMPL implements ItemService {
     private ModelMapper modelMapper;
     private ItemMapper itemMapper;
     private ItemCategoryRepository itemCategoryRepository;
-    private APIClient apiClient;
+    private APIClientSupplierService apiClientSupplierService;
+    private APIClientBranchService apiClientBranchService;
 
     /**
      * Saves a new item based on the provided item save request DTO.
@@ -61,7 +53,16 @@ public class ItemServiceIMPL implements ItemService {
 
         item.setItemCategory(category); // Ensure item category is set
 
-        // TODO: Check if branch exists
+        // Check if branch exists
+        ResponseEntity<StandardResponse> responseEntityForBranch =
+                apiClientBranchService.checkBranchExistsById((int) itemSaveRequestDTO.getBranchId());
+
+        boolean branchExists = (boolean) Objects.requireNonNull(responseEntityForBranch.getBody()).getData();
+        if (branchExists) {
+            item.setBranchId(itemSaveRequestDTO.getBranchId());
+        } else {
+            throw new NotFoundException("Branch not found with ID: " + itemSaveRequestDTO.getBranchId());
+        }
 
         // TODO: Check if supplier exists
 

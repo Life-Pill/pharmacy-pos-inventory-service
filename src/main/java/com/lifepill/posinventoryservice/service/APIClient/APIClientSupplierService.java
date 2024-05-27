@@ -1,4 +1,4 @@
-package com.lifepill.posinventoryservice.service;
+package com.lifepill.posinventoryservice.service.APIClient;
 
 import com.lifepill.posinventoryservice.dto.SupplierAndSupplierCompanyDTO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
         value = "SUPPLIER-SERVICE"
 )*/
 @FeignClient(name = "SUPPLIER-SERVICE/lifepill/v1")
-public interface APIClient {
+public interface APIClientSupplierService {
 
     @GetMapping(path ="/supplier/get-supplier-with-company/{supplierId}")
     SupplierAndSupplierCompanyDTO getSupplierAndCompanyBySupplierId(
             @PathVariable("supplierId") long supplierId
     );
-
 }
