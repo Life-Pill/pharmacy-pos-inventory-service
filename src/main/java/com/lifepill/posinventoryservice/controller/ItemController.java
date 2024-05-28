@@ -134,6 +134,20 @@ public class ItemController {
                 HttpStatus.OK);
     }
 
+    /**
+     * Saves an item category.
+     *
+     * @return A message indicating the result of the save operation.
+     */
+    @GetMapping(path = "/get-item-all-details-by-id/{itemId}")
+    public ResponseEntity<StandardResponse> getItemAllDetailsById(@PathVariable(value = "itemId") long itemId){
+        SupplierItemApiResponseDTO supplierItemApiResponseDTO = itemService.getAllDetailsItemById(itemId);
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(200,"Success",supplierItemApiResponseDTO),
+                HttpStatus.OK
+        );
+    }
+
     /*
      *//**
      * Retrieves items by name and status using MapStruct.
@@ -150,15 +164,6 @@ public class ItemController {
 
 
 
-   /**
-     * Handles a test POST request.
-     *
-     * @return ResponseEntity containing a success message for the POST request.
-     *//*
-    @PostMapping("/test-request")
-    public ResponseEntity<String> testPostRequest() {
-        return ResponseEntity.ok("POST request successful");
-    }
 
     *//**
      * Updates an item.
@@ -211,21 +216,9 @@ public class ItemController {
         );
     }
 
-    *//**
-     * Saves an item category.
-     *
-     * @return A message indicating the result of the save operation.
-     *//*
-    @GetMapping(path = "/get-item-all-details-by-id/{id}")
-    public ResponseEntity<StandardResponse> getItemAllDetailsById(@PathVariable(value = "id") long itemId){
-        SupplierItemApiResponseDTO supplierItemApiResponseDTO = itemService.getAllDetailsItemById(itemId);
-        return new ResponseEntity<StandardResponse>(
-                new StandardResponse(200,"Success",supplierItemApiResponseDTO),
-                HttpStatus.OK
-        );
-    }
 
-    *//**
+
+    /**
      * Gets item with category by id.
      *
      * @param itemId the item id

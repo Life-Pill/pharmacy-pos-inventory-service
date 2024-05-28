@@ -31,6 +31,8 @@ public interface ItemService {
     List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode);
 
     List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus);
+
+    SupplierItemApiResponseDTO getAllDetailsItemById(long itemId);
  /*
   List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName);
 
@@ -56,5 +58,5 @@ public interface ItemService {
 
     ItemGetResponseWithoutSupplierDetailsDTO getItemById(long itemId);
 
-    SupplierItemApiResponseDTO getAllDetailsItemById(long itemId);*/
+    */
 }
