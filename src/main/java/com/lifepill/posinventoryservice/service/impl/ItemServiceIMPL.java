@@ -3,6 +3,7 @@ package com.lifepill.posinventoryservice.service.impl;
 import com.lifepill.posinventoryservice.dto.ItemCategoryDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetAllResponseDTO;
+import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.posinventoryservice.entity.Item;
 import com.lifepill.posinventoryservice.entity.ItemCategory;
 import com.lifepill.posinventoryservice.exception.EntityDuplicationException;
@@ -16,6 +17,7 @@ import com.lifepill.posinventoryservice.util.StandardResponse;
 import com.lifepill.posinventoryservice.util.mappers.ItemMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -108,29 +110,28 @@ public class ItemServiceIMPL implements ItemService {
             throw new NotFoundException("No Item Find or OUT of Stock");
         }
     }
-/*
-    *//**
+
+    /**
      * Retrieves items by name and stock status.
      *
      * @param itemName The name of the item to search for.
      * @return A list of DTOs representing items matching the search criteria.
      * @throws NotFoundException If no items are found.
-     *//*
+     */
     @Override
     public List<ItemGetResponseDTO> getItemByName(String itemName) {
         List<Item> items = itemRepository.findAllByItemName(itemName);
         if (!items.isEmpty()) {
-            List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
+            return modelMapper.map(
                     items,
                     new TypeToken<List<ItemGetResponseDTO>>() {
                     }.getType()
             );
-            return itemGetResponseDTOS;
         } else {
             throw new NotFoundException("Not found");
         }
     }
-
+/*
     *//**
      * Retrieves items by stock status.
      *

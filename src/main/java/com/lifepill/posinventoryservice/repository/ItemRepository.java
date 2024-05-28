@@ -12,9 +12,16 @@ import java.util.List;
 @Repository
 @EnableJpaRepositories
 public interface ItemRepository extends JpaRepository<Item,Long> {
+
     List<Item> findAllByItemNameEqualsAndStockEquals(String itemName, boolean b);
+
     List<Item> findAllByStockEquals(boolean activeStatus);
+
     Page<Item> findAllByStockEquals(boolean activeStatus, Pageable pageable);
+
     int countAllByStockEquals(boolean activeStatus);
+
     List<Item> findAllByItemBarCodeEquals(String itemBarCode);
+
+    List<Item> findAllByItemName(String itemName);
 }

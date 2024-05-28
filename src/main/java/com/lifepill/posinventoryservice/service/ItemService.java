@@ -26,10 +26,9 @@ public interface ItemService {
 
     List<ItemGetAllResponseDTO> getAllItems();
 
-   /* List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName);
-
     List<ItemGetResponseDTO> getItemByName(String itemName);
-
+ /*
+  List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName);
     List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus);
 
     String updateItem(ItemUpdateDTO itemUpdateDTO);

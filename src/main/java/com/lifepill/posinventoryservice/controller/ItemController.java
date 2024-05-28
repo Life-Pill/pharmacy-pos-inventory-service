@@ -78,19 +78,26 @@ public class ItemController {
                 HttpStatus.OK
         );
     }
-/*
-    *//**
+
+    /**
      * Retrieves items by name and stock.
      *
      * @param itemName The name of the item to retrieve.
      * @return List of ItemGetResponseDTO containing items with the specified name and stock.
-     *//*
+     */
     @GetMapping(path = "/get-by-name", params = "itemName")
-    public List<ItemGetResponseDTO> getItemByNameAndStock(@RequestParam(value = "itemName") String itemName) {
+    public ResponseEntity<StandardResponse> getItemByNameAndStock(@RequestParam(value = "itemName") String itemName) {
         List<ItemGetResponseDTO> itemDTOS = itemService.getItemByName(itemName);
-        return itemDTOS;
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        200,
+                        "Successfully retrieve items",
+                        itemDTOS
+                ),
+                HttpStatus.OK
+        );
     }
-
+/*
     *//**
      * Retrieves items by barcode.
      *
