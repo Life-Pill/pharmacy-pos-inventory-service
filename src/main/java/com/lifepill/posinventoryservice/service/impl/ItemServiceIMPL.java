@@ -58,13 +58,24 @@ public class ItemServiceIMPL implements ItemService {
                 apiClientBranchService.checkBranchExistsById((int) itemSaveRequestDTO.getBranchId());
 
         boolean branchExists = (boolean) Objects.requireNonNull(responseEntityForBranch.getBody()).getData();
+
         if (branchExists) {
             item.setBranchId(itemSaveRequestDTO.getBranchId());
         } else {
-            throw new NotFoundException("Branch not found with ID: " + itemSaveRequestDTO.getBranchId());
+            throw new NotFoundException("Branch not found with ID: " + itemSaveRequestDTO.getSupplierId());
         }
 
-        // TODO: Check if supplier exists
+        // Check if supplier exists
+         ResponseEntity<StandardResponse> responseEntityForSupplier =
+                apiClientSupplierService.checkSupplierExistsById(itemSaveRequestDTO.getSupplierId());
+
+        boolean supplierExists = (boolean) Objects.requireNonNull(responseEntityForSupplier.getBody()).getData();
+
+        if (supplierExists) {
+            item.setSupplierId(itemSaveRequestDTO.getSupplierId());
+        } else {
+            throw new NotFoundException("Supplier not found with ID: " + itemSaveRequestDTO.getSupplierId());
+        }
 
         if (!itemRepository.existsById(item.getItemId())) {
             itemRepository.save(item);
