@@ -61,13 +61,13 @@ public class ItemController {
                 HttpStatus.CREATED);
     }
 
-  /**
+    /**
      * Retrieves all items.
      *
      * @return ResponseEntity containing a StandardResponse object with a list of all items.
      */
     @GetMapping(path = "get-all-items")
-    public ResponseEntity<StandardResponse> getAllItems(){
+    public ResponseEntity<StandardResponse> getAllItems() {
         List<ItemGetAllResponseDTO> allItems = itemService.getAllItems();
         return new ResponseEntity<>(
                 new StandardResponse(
@@ -97,20 +97,27 @@ public class ItemController {
                 HttpStatus.OK
         );
     }
-/*
-    *//**
+
+    /**
      * Retrieves items by barcode.
      *
      * @param itemBarCode The barcode of the item to retrieve.
      * @return List of ItemGetResponseDTO containing items with the specified barcode.
-     *//*
+     */
     @GetMapping(path = "/get-by-barcode", params = "barcode")
-    public List<ItemGetResponseDTO> getItemByBarCode(@RequestParam(value = "barcode") String itemBarCode) {
+    public ResponseEntity<StandardResponse> getItemByBarCode(@RequestParam(value = "barcode") String itemBarCode) {
         List<ItemGetResponseDTO> itemDTOS = itemService.getItemByBarCode(itemBarCode);
-        return itemDTOS;
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        200,
+                        "Successfully retrieve items",
+                        itemDTOS
+                ),
+                HttpStatus.OK
+        );
     }
-
-    *//**
+    /*
+     *//**
      * Retrieves items by name and status using MapStruct.
      *
      * @param itemName The name of the item to retrieve.

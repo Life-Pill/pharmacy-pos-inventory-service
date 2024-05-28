@@ -27,6 +27,9 @@ public interface ItemService {
     List<ItemGetAllResponseDTO> getAllItems();
 
     List<ItemGetResponseDTO> getItemByName(String itemName);
+
+    List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode);
+
  /*
   List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName);
     List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus);
@@ -38,7 +41,7 @@ public interface ItemService {
 
     PaginatedResponseItemDTO getItemByStockStatusWithPaginateed(boolean activeStatus, int page, int size);
 
-    List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode);
+
 
     String saveCategory(ItemCategoryDTO categoryDTO);
 

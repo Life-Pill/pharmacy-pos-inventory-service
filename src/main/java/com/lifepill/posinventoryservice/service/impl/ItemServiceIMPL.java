@@ -131,6 +131,28 @@ public class ItemServiceIMPL implements ItemService {
             throw new NotFoundException("Not found");
         }
     }
+
+    /**
+     * Retrieves items by barcode.
+     *
+     * @param itemBarCode The barcode of the item to search for.
+     * @return A list of DTOs representing items with the specified barcode.
+     * @throws NotFoundException If no items are found.
+     */
+    @Override
+    public List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode) {
+        List<Item> item = itemRepository.findAllByItemBarCodeEquals(itemBarCode);
+        if (!item.isEmpty()) {
+            List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
+                    item,
+                    new TypeToken<List<ItemGetResponseDTO>>() {
+                    }.getType()
+            );
+            return itemGetResponseDTOS;
+        } else {
+            throw new NotFoundException("No any item found for that barcode");
+        }
+    }
 /*
     *//**
      * Retrieves items by stock status.
@@ -159,29 +181,8 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
-    *//**
-     * Retrieves items by barcode.
-     *
-     * @param itemBarCode The barcode of the item to search for.
-     * @return A list of DTOs representing items with the specified barcode.
-     * @throws NotFoundException If no items are found.
-     *//*
-    @Override
-    public List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode) {
-        List<Item> item = itemRepository.findAllByItemBarCodeEquals(itemBarCode);
-        if (!item.isEmpty()) {
-            List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
-                    item,
-                    new TypeToken<List<ItemGetResponseDTO>>() {
-                    }.getType()
-            );
-            return itemGetResponseDTOS;
-        } else {
-            throw new NotFoundException("No any item found for that barcode");
-        }
-    }
 
-    *//**
+//**
      * Updates an existing item based on the provided update DTO.
      *
      * @param itemUpdateDTO The DTO containing the updated details of the item.
