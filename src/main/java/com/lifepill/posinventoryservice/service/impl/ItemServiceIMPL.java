@@ -70,7 +70,7 @@ public class ItemServiceIMPL implements ItemService {
         }
 
         // Check if supplier exists
-         ResponseEntity<StandardResponse> responseEntityForSupplier =
+        ResponseEntity<StandardResponse> responseEntityForSupplier =
                 apiClientSupplierService.checkSupplierExistsById(itemSaveRequestDTO.getSupplierId());
 
         boolean supplierExists = (boolean) Objects.requireNonNull(responseEntityForSupplier.getBody()).getData();
@@ -89,7 +89,7 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
-     /**
+    /**
      * Retrieves all items from the database.
      *
      * @return A list of DTOs representing all items.
@@ -143,44 +143,42 @@ public class ItemServiceIMPL implements ItemService {
     public List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode) {
         List<Item> item = itemRepository.findAllByItemBarCodeEquals(itemBarCode);
         if (!item.isEmpty()) {
-            List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
+            return modelMapper.map(
                     item,
                     new TypeToken<List<ItemGetResponseDTO>>() {
                     }.getType()
             );
-            return itemGetResponseDTOS;
         } else {
             throw new NotFoundException("No any item found for that barcode");
         }
     }
-/*
-    *//**
+
+    /**
      * Retrieves items by stock status.
      *
      * @param activeStatus The stock status to filter by.
      * @return A list of DTOs representing items with the specified stock status.
      * @throws NotFoundException If no items are found.
-     *//*
+     */
     @Override
     public List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus) {
         List<Item> item = itemRepository.findAllByStockEquals(activeStatus);
         if (!item.isEmpty()) {
-            List<ItemGetResponseDTO> itemGetResponseDTOS = modelMapper.map(
+            List<ItemGetResponseDTO> itemGetResponseDTOS;
+            itemGetResponseDTOS = modelMapper.map(
                     item,
                     new TypeToken<List<ItemGetResponseDTO>>() {
                     }.getType()
             );
-            // System.out.println(itemGetResponseDTOS);
-            //get responseDTOS getItemCategory.getItemName()
-
-
 
             return itemGetResponseDTOS;
+
         } else {
             throw new NotFoundException("out of Stock");
         }
     }
 
+/*
 
 //**
      * Updates an existing item based on the provided update DTO.

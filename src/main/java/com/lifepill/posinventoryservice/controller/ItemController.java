@@ -116,6 +116,24 @@ public class ItemController {
                 HttpStatus.OK
         );
     }
+
+    /**
+     * Retrieves all items by their active status.
+     *
+     * @param activeStatus The status indicating whether the items are active or not.
+     * @return ResponseEntity containing a StandardResponse object with a list of items based on their active status.
+     */
+    @GetMapping(path = "/get-all-item-by-status", params = "activeStatus")
+    public ResponseEntity<StandardResponse> getAllItemByActiveStatus(
+            @RequestParam(value = "activeStatus") boolean activeStatus) {
+        List<ItemGetResponseDTO> itemDTOS = itemService.getItemByStockStatus(activeStatus);
+
+        return new ResponseEntity<StandardResponse>(
+                new StandardResponse(200,
+                        "Success", itemDTOS),
+                HttpStatus.OK);
+    }
+
     /*
      *//**
      * Retrieves items by name and status using MapStruct.
@@ -130,24 +148,9 @@ public class ItemController {
         return itemDTOS;
     }
 
-    *//**
-     * Retrieves all items by their active status.
-     *
-     * @param activeStatus The status indicating whether the items are active or not.
-     * @return ResponseEntity containing a StandardResponse object with a list of items based on their active status.
-     *//*
-    @GetMapping(path = "/get-all-item-by-status", params = "activeStatus")
-    public ResponseEntity<StandardResponse> getAllItemByActiveStatus(
-            @RequestParam(value = "activeStatus") boolean activeStatus) {
-        List<ItemGetResponseDTO> itemDTOS = itemService.getItemByStockStatus(activeStatus);
 
-        return new ResponseEntity<StandardResponse>(
-                new StandardResponse(200,
-                        "Success", itemDTOS),
-                HttpStatus.OK);
-    }
 
-    *//**
+   /**
      * Handles a test POST request.
      *
      * @return ResponseEntity containing a success message for the POST request.

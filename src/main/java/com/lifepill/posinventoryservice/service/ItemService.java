@@ -30,9 +30,10 @@ public interface ItemService {
 
     List<ItemGetResponseDTO> getItemByBarCode(String itemBarCode);
 
+    List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus);
  /*
   List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName);
-    List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus);
+
 
     String updateItem(ItemUpdateDTO itemUpdateDTO);
 
