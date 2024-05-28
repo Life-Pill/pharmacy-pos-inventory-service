@@ -24,6 +24,8 @@ public interface ItemService {
 
     String deleteCategory(long categoryId);
 
+    List<ItemGetAllResponseDTO> getAllItems();
+
    /* List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName);
 
     List<ItemGetResponseDTO> getItemByName(String itemName);
@@ -33,7 +35,7 @@ public interface ItemService {
     String updateItem(ItemUpdateDTO itemUpdateDTO);
 
     String deleteItem(long itemId);
-    List<ItemGetAllResponseDTO> getAllItems();
+
 
     PaginatedResponseItemDTO getItemByStockStatusWithPaginateed(boolean activeStatus, int page, int size);
 

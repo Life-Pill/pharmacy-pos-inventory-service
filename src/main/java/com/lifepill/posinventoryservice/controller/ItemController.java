@@ -61,21 +61,24 @@ public class ItemController {
                 HttpStatus.CREATED);
     }
 
-    /* *//**
+  /**
      * Retrieves all items.
      *
      * @return ResponseEntity containing a StandardResponse object with a list of all items.
-     *//*
-    @CrossOrigin(origins = "http://localhost:3000/", maxAge = 3600)
+     */
     @GetMapping(path = "get-all-items")
     public ResponseEntity<StandardResponse> getAllItems(){
         List<ItemGetAllResponseDTO> allItems = itemService.getAllItems();
-        return new ResponseEntity<StandardResponse>(
-                new StandardResponse(201,"SUCCESS",allItems),
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        201,
+                        "Successfully retrieve all items",
+                        allItems
+                ),
                 HttpStatus.OK
         );
     }
-
+/*
     *//**
      * Retrieves items by name and stock.
      *

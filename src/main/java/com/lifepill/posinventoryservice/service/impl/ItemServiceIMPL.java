@@ -2,6 +2,7 @@ package com.lifepill.posinventoryservice.service.impl;
 
 import com.lifepill.posinventoryservice.dto.ItemCategoryDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestDTO;
+import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.posinventoryservice.entity.Item;
 import com.lifepill.posinventoryservice.entity.ItemCategory;
 import com.lifepill.posinventoryservice.exception.EntityDuplicationException;
@@ -18,6 +19,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -85,13 +87,12 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
-    /*
-     *//**
+     /**
      * Retrieves all items from the database.
      *
      * @return A list of DTOs representing all items.
      * @throws NotFoundException If no items are found or they are out of stock.
-     *//*
+     */
     @Override
     public List<ItemGetAllResponseDTO> getAllItems() {
         List<Item> getAllItems = itemRepository.findAll();
@@ -99,34 +100,7 @@ public class ItemServiceIMPL implements ItemService {
         if (!getAllItems.isEmpty()) {
             List<ItemGetAllResponseDTO> itemGetAllResponseDTOSList = new ArrayList<>();
             for (Item item : getAllItems) {
-                ItemGetAllResponseDTO itemGetAllResponseDTO = new ItemGetAllResponseDTO(
-                        item.getItemId(),
-                        item.getBranchId(),
-                        item.getItemName(),
-                        item.getSellingPrice(),
-                        item.getItemBarCode(),
-                        item.getSupplyDate(),
-                        item.getSupplierPrice(),
-                        item.isFreeIssued(),
-                        item.isDiscounted(),
-                        item.getItemManufacture(),
-                        item.getItemQuantity(),
-                        item.getItemCategory().getCategoryName(),
-                        item.getItemCategory().getCategoryId(),
-                        item.isStock(),
-                        item.getMeasuringUnitType(),
-                        item.getManufactureDate(),
-                        item.getExpireDate(),
-                        item.getPurchaseDate(),
-                        item.getWarrantyPeriod(),
-                        item.getRackNumber(),
-                        item.getDiscountedPrice(),
-                        item.getDiscountedPercentage(),
-                        item.getWarehouseName(),
-                        item.isSpecialCondition(),
-                        item.getItemImage(),
-                        item.getItemDescription()
-                );
+                ItemGetAllResponseDTO itemGetAllResponseDTO = modelMapper.map(item, ItemGetAllResponseDTO.class);
                 itemGetAllResponseDTOSList.add(itemGetAllResponseDTO);
             }
             return itemGetAllResponseDTOSList;
@@ -134,7 +108,7 @@ public class ItemServiceIMPL implements ItemService {
             throw new NotFoundException("No Item Find or OUT of Stock");
         }
     }
-
+/*
     *//**
      * Retrieves items by name and stock status.
      *
@@ -369,53 +343,6 @@ public class ItemServiceIMPL implements ItemService {
 
 
 
-    @Override
-    public SupplierItemApiResponseDTO getAllDetailsItemById(long itemId) {
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
-
-        ItemGetIdResponseDTO itemGetIdResponseDTO = modelMapper.map(item, ItemGetIdResponseDTO.class);
-
-        // Map Item Get All response
-        ItemGetAllResponseDTO itemGetAllResponseDTO = modelMapper.map(item, ItemGetAllResponseDTO.class);
-        itemGetIdResponseDTO.setItemGetAllResponseDTO(itemGetAllResponseDTO);
-
-
-        // Map ItemCategory
-        ItemCategory itemCategory = item.getItemCategory();
-        ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
-        itemGetIdResponseDTO.setItemCategoryDTO(itemCategoryDTO);
-
-        //rest template supplier
-        //TODO: need to create supplier service when given supplier id to retrieve supplier and supplier company details
-       *//* ResponseEntity<SupplierAndSupplierCompanyDTO> responseEntityForSupplier =restTemplate.getForEntity(
-                "http://localhost:8082/lifepill/v1/supplier/get-supplier-with-company/"+item.getSupplierId(),
-                SupplierAndSupplierCompanyDTO.class
-                );*//*
-        // SupplierAndSupplierCompanyDTO supplierAndSupplierCompanyDTO = responseEntityForSupplier.getBody();
-
-
-        SupplierAndSupplierCompanyDTO supplierAndSupplierCompanyDTO =
-                apiClient.getSupplierAndCompanyBySupplierId(item.getSupplierId());
-
-
-        //TODO: Map Supplier
-       *//* Supplier supplier = item.getSupplier();
-        SupplierDTO supplierDTO = modelMapper.map(supplier, SupplierDTO.class);
-        itemGetIdResponseDTO.setSupplierDTO(supplierDTO);
-
-        // Map SupplierCompany
-        SupplierCompany supplierCompany = supplier.getSupplierCompany();
-        SupplierCompanyDTO supplierCompanyDTO = modelMapper.map(supplierCompany, SupplierCompanyDTO.class);
-        itemGetIdResponseDTO.setSupplierCompanyDTO(supplierCompanyDTO);*//*
-
-
-        SupplierItemApiResponseDTO supplierItemApiResponseDTO = new SupplierItemApiResponseDTO();
-        supplierItemApiResponseDTO.setItemGetIdResponseDTO(itemGetIdResponseDTO);
-        supplierItemApiResponseDTO.setSupplierAndSupplierCompanyDTO(supplierAndSupplierCompanyDTO);
-
-        return supplierItemApiResponseDTO;
-    }
 
     @Override
     public ItemGetResponseWithoutSupplierDetailsDTO getItemById(long itemId) {
@@ -525,4 +452,5 @@ public class ItemServiceIMPL implements ItemService {
             throw new NotFoundException("Category not found");
         }
     }
+
 }
