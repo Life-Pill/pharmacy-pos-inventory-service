@@ -37,13 +37,13 @@ public interface ItemService {
     String deleteItem(long itemId);
 
     ItemGetResponseWithoutSupplierDetailsDTO getItemAndCategoryById(long itemId);
- /*
-  List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName);
-
 
     String updateItem(ItemUpdateDTO itemUpdateDTO);
 
-    String deleteItem(long itemId);
+    String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO);
+ /*
+
+
 
 
     PaginatedResponseItemDTO getItemByStockStatusWithPaginateed(boolean activeStatus, int page, int size);
@@ -52,7 +52,7 @@ public interface ItemService {
 
     String saveCategory(ItemCategoryDTO categoryDTO);
 
-    String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO);
+
 
     List<ItemCategoryDTO> getAllCategories();
 

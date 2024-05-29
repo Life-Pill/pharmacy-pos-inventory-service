@@ -3,7 +3,9 @@ package com.lifepill.posinventoryservice.service.impl;
 import com.lifepill.posinventoryservice.dto.ApiResponseDTO.SupplierItemApiResponseDTO;
 import com.lifepill.posinventoryservice.dto.ItemCategoryDTO;
 import com.lifepill.posinventoryservice.dto.SupplierAndSupplierCompanyDTO;
+import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestDTO;
+import com.lifepill.posinventoryservice.dto.requestDTO.ItemUpdateDTO;
 import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetIdResponseDTO;
 import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetResponseDTO;
@@ -248,23 +250,18 @@ public class ItemServiceIMPL implements ItemService {
         return itemGetResponsewithoutSupplierDetailsDTO;
     }
 
-
-   /* */
-
-
-/*
-
-//**
+    //TODO: Need to Check all condition and optimize the code
+    /**
      * Updates an existing item based on the provided update DTO.
      *
      * @param itemUpdateDTO The DTO containing the updated details of the item.
      * @return A message indicating the success of the update operation.
      * @throws NotFoundException If the item to be updated is not found.
-     *//*
+     */
     @Override
     public String updateItem(ItemUpdateDTO itemUpdateDTO) {
-        if (itemRepository.existsById(itemUpdateDTO.getItemId())) {
-            Item item = itemRepository.getReferenceById(itemUpdateDTO.getItemId());
+        if (itemRepository.existsById((long) itemUpdateDTO.getItemId())) {
+            Item item = itemRepository.getReferenceById((long) itemUpdateDTO.getItemId());
             item.setItemName(itemUpdateDTO.getItemName());
             item.setItemBarCode(itemUpdateDTO.getItemBarCode());
             item.setSupplyDate(itemUpdateDTO.getSupplyDate());
@@ -296,6 +293,64 @@ public class ItemServiceIMPL implements ItemService {
             throw new NotFoundException("no Item found in that date");
         }
     }
+    /**
+     * Saves an item with its associated category and supplier.
+     *
+     * @param itemSaveRequestCategoryDTO The DTO containing the details of the item and its associated category and supplier.
+     * @return A message indicating the success of the save operation.
+     * @throws NotFoundException If the associated category or supplier is not found.
+     */
+    //TODO: need to check all conditions and optimize the code
+    @Override
+    public String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) {
+        // Check if category exists
+        ItemCategory category = itemCategoryRepository.findById(itemSaveRequestCategoryDTO.getCategoryId())
+                .orElseGet(() -> {
+
+                    // If category doesn't exist, create a new one
+                    ItemCategory newCategory = new ItemCategory();
+                    // Set category properties if needed
+                    // newCategory.setCategoryName(itemSaveRequestCategoryDTO.getCategoryName());
+                    // newCategory.setCategoryDescription(itemSaveRequestCategoryDTO.getCategoryDescription());
+                    // Save the new category
+                    return itemCategoryRepository.save(newCategory);
+                });
+
+        // Check if supplier exists
+        ResponseEntity<StandardResponse> responseEntityForSupplier =
+                apiClientSupplierService.checkSupplierExistsById(
+                        itemSaveRequestCategoryDTO.getSupplierId()
+                );
+
+        // Check if branch exists
+        ResponseEntity<StandardResponse> responseEntityForBranch =
+                apiClientBranchService.checkBranchExistsById(
+                        (int) itemSaveRequestCategoryDTO.getBranchId()
+                );
+
+        itemRepository.findById(itemSaveRequestCategoryDTO.getItemId())
+                .ifPresent(item -> {
+                    throw new EntityDuplicationException("Item already exists with ID: "
+                            + itemSaveRequestCategoryDTO.getItemId());
+                });
+
+        // Now, associate the item with the category and supplier
+        Item item = modelMapper.map(itemSaveRequestCategoryDTO, Item.class);
+        item.setItemCategory(category);
+        //TODO: ensure supplier is set
+        // item.setSupplier(supplier);
+        // Ensure the supplier is set
+        item.setBranchId(itemSaveRequestCategoryDTO.getBranchId());
+
+        itemRepository.save(item);
+        return "Item saved successfully with category and supplier";
+
+        //TODO: Need to get response of real item id now it shows in zero
+    }
+
+
+
+/*
 
     /**
      * Retrieves items by stock status with pagination.
@@ -342,60 +397,6 @@ public class ItemServiceIMPL implements ItemService {
     }
 
 
-
-    *//**
-     * Saves an item with its associated category and supplier.
-     *
-     * @param itemSaveRequestCategoryDTO The DTO containing the details of the item and its associated category and supplier.
-     * @return A message indicating the success of the save operation.
-     * @throws NotFoundException If the associated category or supplier is not found.
-     *//*
-    @Override
-    public String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO) {
-        // Check if category exists
-        ItemCategory category = itemCategoryRepository.findById(itemSaveRequestCategoryDTO.getCategoryId())
-                .orElseGet(() -> {
-
-                    // If category doesn't exist, create a new one
-                    ItemCategory newCategory = new ItemCategory();
-                    // Set category properties if needed
-                    // newCategory.setCategoryName(itemSaveRequestCategoryDTO.getCategoryName());
-                    // newCategory.setCategoryDescription(itemSaveRequestCategoryDTO.getCategoryDescription());
-                    // Save the new category
-                    return itemCategoryRepository.save(newCategory);
-                });
-
-        // Check if supplier exists
-        //TODO : Check if supplier exists or not
-        *//*Supplier supplier = supplierRepository.findById(itemSaveRequestCategoryDTO.getSupplierId())
-                .orElseThrow(() -> new NotFoundException("Supplier not found with ID: "
-                        + itemSaveRequestCategoryDTO.getSupplierId())
-                );*//*
-
-        // Check if branch exists
-        Branch branch = branchRepository.findById(itemSaveRequestCategoryDTO.getBranchId())
-                .orElseThrow(() -> new NotFoundException("Branch not found with ID: "
-                        + itemSaveRequestCategoryDTO.getBranchId())
-                );
-
-        itemRepository.findById(itemSaveRequestCategoryDTO.getItemId())
-                .ifPresent(item -> {
-                    throw new EntityDuplicationException("Item already exists with ID: "
-                            + itemSaveRequestCategoryDTO.getItemId());
-                });
-
-        // Now, associate the item with the category and supplier
-        Item item = modelMapper.map(itemSaveRequestCategoryDTO, Item.class);
-        item.setItemCategory(category);
-        //TODO: ensure supplier is set
-        // item.setSupplier(supplier); // Ensure the supplier is set
-        item.setBranchId(itemSaveRequestCategoryDTO.getBranchId());
-
-        itemRepository.save(item);
-        return "Item saved successfully with category and supplier";
-
-        //TODO: Need to get response of real item id now it shows in zero
-    }
 
 
 

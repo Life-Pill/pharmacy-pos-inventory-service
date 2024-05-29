@@ -1,7 +1,6 @@
 package com.lifepill.posinventoryservice.controller;
 
 import com.lifepill.posinventoryservice.dto.ApiResponseDTO.SupplierItemApiResponseDTO;
-import com.lifepill.posinventoryservice.dto.paginated.PaginatedResponseItemDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemUpdateDTO;
@@ -28,12 +27,12 @@ public class ItemController {
 
     private ItemService itemService;
 
-    /*    *//**
+  /**
      * Saves an item along with its category.
      *
      * @param itemSaveRequestCategoryDTO The DTO containing details of the item and its category to be saved.
      * @return ResponseEntity containing a StandardResponse object with a success message.
-     *//*
+     */
     @PostMapping(path = "/save-item")
     public ResponseEntity<StandardResponse> saveItemWithCategory(
             @RequestBody ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO
@@ -43,7 +42,7 @@ public class ItemController {
         return new ResponseEntity<>(
                 new StandardResponse(201, "Successfully Saved Item", message),
                 HttpStatus.CREATED);
-    }*/
+    }
 
     /**
      * Saves an item.
@@ -189,63 +188,24 @@ public class ItemController {
         );
     }
 
-    /*
-     *//**
-     * Retrieves items by name and status using MapStruct.
-     *
-     * @param itemName The name of the item to retrieve.
-     * @return List of ItemGetResponseDTO containing items with the specified name and status.
-     *//*
-    //TODO: need to improvement
-    @GetMapping(path = "/get-by-name-with-mapstruct", params = "name")
-    public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(@RequestParam(value = "name") String itemName) {
-        List<ItemGetResponseDTO> itemDTOS = itemService.getItemByNameAndStatusBymapstruct(itemName);
-        return itemDTOS;
-    }
-
-
-
-
-    *//**
+    /**
      * Updates an item.
      *
      * @param itemUpdateDTO The DTO containing updated item information.
      * @return A message indicating the result of the update operation.
-     *//*
-    @PutMapping("/update")
-    public String updateItem(@RequestBody ItemUpdateDTO itemUpdateDTO){
-        String message = itemService.updateItem(itemUpdateDTO);
-        return message;
-    }
-
-    /**
-     * Retrieves all items by their active status with lazy initialization.
-     *
-     * @param activeStatus The status indicating whether the items are active or not.
-     * @param page         The page number for pagination.
-     * @param size         The number of items per page for pagination.
-     * @return ResponseEntity containing a StandardResponse object with paginated items based on their active status.
-     *//*
-    @GetMapping(
-            path = "/get-all-item-by-status-lazy-initailized",
-            params = {"activeStatus","page","size"}
-    )
-    public ResponseEntity<StandardResponse> getItemByStockStatusLazy(
-            @RequestParam(value = "activeStatus") boolean activeStatus,
-            @RequestParam(value = "page") int page,
-            @RequestParam(value = "size") int size
-            // @RequestParam(value = "size") @Max(50)int size
+     */
+    @PutMapping("/update-item")
+    public ResponseEntity<StandardResponse> updateItem(
+            @RequestBody ItemUpdateDTO itemUpdateDTO
     ){
-        // size = 10; // only load 10 data
-        //List<ItemGetResponseDTO> itemDTOS = itemService.getItemByActiveStatusLazy(activeStatus);
-        PaginatedResponseItemDTO paginatedResponseItemDTO = itemService.getItemByStockStatusWithPaginateed(activeStatus,page,size);
-        return new ResponseEntity<StandardResponse>(
-                new StandardResponse(200,"Success",paginatedResponseItemDTO),
+        String message = itemService.updateItem(itemUpdateDTO);
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        200,
+                        message,
+                        itemUpdateDTO
+                ),
                 HttpStatus.OK
         );
     }
-
-
-
-   */
 }
