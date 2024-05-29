@@ -2,17 +2,17 @@ package com.lifepill.posinventoryservice.dto.responseDTO;
 
 
 import com.lifepill.posinventoryservice.entity.enums.MeasuringUnitType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 public class ItemGetAllResponseDTO {
-    private int itemId;
+    private long itemId;
     private String itemName;
     private double sellingPrice;
     private String itemBarCode;
