@@ -1,6 +1,11 @@
 spring:
   application:
     name: INVENTORY-SERVICE
+    
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/inventory-service
+    username: postgres
 
   config:
     import: optional:configserver:http://localhost:8888
@@ -10,6 +15,10 @@ spring:
     port: 5672
     username: guest
     password: guest
+
+  security:
+    user:
+      name: lifepill
 
 management:
   endpoints:
