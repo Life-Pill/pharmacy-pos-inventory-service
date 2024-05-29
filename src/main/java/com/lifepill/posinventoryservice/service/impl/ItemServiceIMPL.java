@@ -20,7 +20,6 @@ import com.lifepill.posinventoryservice.service.APIClient.APIClientSupplierServi
 import com.lifepill.posinventoryservice.service.APIClient.APIClientBranchService;
 import com.lifepill.posinventoryservice.service.ItemService;
 import com.lifepill.posinventoryservice.util.StandardResponse;
-import com.lifepill.posinventoryservice.util.mappers.ItemMapper;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -39,7 +38,6 @@ public class ItemServiceIMPL implements ItemService {
 
     private ItemRepository itemRepository;
     private ModelMapper modelMapper;
-    private ItemMapper itemMapper;
     private ItemCategoryRepository itemCategoryRepository;
     private APIClientSupplierService apiClientSupplierService;
     private APIClientBranchService apiClientBranchService;
@@ -101,7 +99,7 @@ public class ItemServiceIMPL implements ItemService {
      * Retrieves all items from the database.
      *
      * @return A list of DTOs representing all items.
-     * @throws NotFoundException If no items are found or they are out of stock.
+     * @throws NotFoundException If no items are found, or they are out of stock.
      */
     @Override
     public List<ItemGetAllResponseDTO> getAllItems() {
@@ -321,12 +319,21 @@ public class ItemServiceIMPL implements ItemService {
                 apiClientSupplierService.checkSupplierExistsById(
                         itemSaveRequestCategoryDTO.getSupplierId()
                 );
+        if (responseEntityForSupplier.getBody() == null) {
+            throw new NotFoundException("Supplier not found with ID: "
+                    + itemSaveRequestCategoryDTO.getSupplierId());
+        }
 
         // Check if branch exists
         ResponseEntity<StandardResponse> responseEntityForBranch =
                 apiClientBranchService.checkBranchExistsById(
                         (int) itemSaveRequestCategoryDTO.getBranchId()
                 );
+        //TODO: Check if the Branch Id is null
+        if (responseEntityForBranch.getBody() == null) {
+            throw new NotFoundException("Branch not found with ID: "
+                    + itemSaveRequestCategoryDTO.getBranchId());
+        }
 
         itemRepository.findById(itemSaveRequestCategoryDTO.getItemId())
                 .ifPresent(item -> {
@@ -347,79 +354,6 @@ public class ItemServiceIMPL implements ItemService {
 
         //TODO: Need to get response of real item id now it shows in zero
     }
-
-
-
-/*
-
-    /**
-     * Retrieves items by stock status with pagination.
-     *
-     * @param activeStatus The stock status to filter by.
-     * @param page         The page number.
-     * @param size         The number of items per page.
-     * @return A paginated response containing items with the specified stock status.
-     * @throws NotFoundException If no items are found.
-     *//*
-    @Override
-    public PaginatedResponseItemDTO getItemByStockStatusWithPaginateed(boolean activeStatus, int page, int size) {
-        Page<Item> items = itemRepository.findAllByStockEquals(activeStatus, PageRequest.of(page, size));
-
-        if (items.getSize() < 1) {
-            throw new NotFoundException("No Data");
-        } else {
-            PaginatedResponseItemDTO paginatedResponseItemDTO = new PaginatedResponseItemDTO(
-                    itemMapper.ListDTOToPage(items),
-                    itemRepository.countAllByStockEquals(activeStatus)
-            );
-            return paginatedResponseItemDTO;
-        }
-    }
-
-
-    *//**
-     * Retrieves items by name and status using MapStruct for mapping.
-     *
-     * @param itemName The name of the item to search for.
-     * @return A list of DTOs representing items with the specified name and stock status.
-     * @throws NotFoundException If no items are found.
-     *//*
-    @Override
-    public List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName) {
-        List<Item> items = itemRepository.findAllByItemNameEqualsAndStockEquals(itemName, true);
-        if (!items.isEmpty()) {
-            List<ItemGetResponseDTO> itemGetResponseDTOS = itemMapper.entityListToDTOList(items);
-
-            return itemGetResponseDTOS;
-        } else {
-            throw new NotFoundException("Not found");
-        }
-    }
-
-
-
-
-
-
-    @Override
-    public ItemGetResponseWithoutSupplierDetailsDTO getItemById(long itemId) {
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
-
-        ItemGetResponseWithoutSupplierDetailsDTO itemGetResponsewithoutSupplierDetailsDTO =
-                modelMapper.map(item, ItemGetResponseWithoutSupplierDetailsDTO.class);
-
-        // Map Get All Item Response
-        ItemGetAllResponseDTO itemGetAllResponseDTO = modelMapper.map(item, ItemGetAllResponseDTO.class);
-        itemGetResponsewithoutSupplierDetailsDTO.setItemGetAllResponseDTO(itemGetAllResponseDTO);
-
-        // Map ItemCategory
-        ItemCategory itemCategory = item.getItemCategory();
-        ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
-        itemGetResponsewithoutSupplierDetailsDTO.setItemCategoryDTO(itemCategoryDTO);
-
-        return itemGetResponsewithoutSupplierDetailsDTO;
-    }*/
 
     /**
      * Saves a new item category.

@@ -2,7 +2,6 @@ package com.lifepill.posinventoryservice.service;
 
 import com.lifepill.posinventoryservice.dto.ApiResponseDTO.SupplierItemApiResponseDTO;
 import com.lifepill.posinventoryservice.dto.ItemCategoryDTO;
-import com.lifepill.posinventoryservice.dto.paginated.PaginatedResponseItemDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemUpdateDTO;
@@ -41,26 +40,5 @@ public interface ItemService {
     String updateItem(ItemUpdateDTO itemUpdateDTO);
 
     String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO);
- /*
 
-
-
-
-    PaginatedResponseItemDTO getItemByStockStatusWithPaginateed(boolean activeStatus, int page, int size);
-
-
-
-    String saveCategory(ItemCategoryDTO categoryDTO);
-
-
-
-    List<ItemCategoryDTO> getAllCategories();
-
-    String updateCategoryDetails(long categoryId, ItemCategoryDTO categoryDTO);
-
-    String deleteCategory(long categoryId);
-
-
-
-    */
 }
