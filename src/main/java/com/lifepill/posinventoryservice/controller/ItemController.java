@@ -148,6 +148,25 @@ public class ItemController {
         );
     }
 
+    /**
+     * Deletes an item by its ID.
+     *
+     * @param itemId The ID of the item to be deleted.
+     * @return A message indicating the result of the delete operation.
+     */
+    @DeleteMapping("/delete-item/{itemId}")
+    public ResponseEntity<StandardResponse> deleteItem(@PathVariable(value = "itemId") int itemId) {
+        String delete = itemService.deleteItem(itemId);
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        200,
+                        delete,
+                        itemId
+                ),
+                HttpStatus.OK
+        );
+    }
+
     /*
      *//**
      * Retrieves items by name and status using MapStruct.
@@ -177,19 +196,7 @@ public class ItemController {
         return message;
     }
 
-    *//**
-     * Deletes an item by its ID.
-     *
-     * @param itemId The ID of the item to be deleted.
-     * @return A message indicating the result of the delete operation.
-     *//*
-    @DeleteMapping("/delete-item/{id}")
-    public String deleteItem(@PathVariable(value = "id") int itemId) {
-        String delete = itemService.deleteItem(itemId);
-        return delete;
-    }
-
-    *//**
+    /**
      * Retrieves all items by their active status with lazy initialization.
      *
      * @param activeStatus The status indicating whether the items are active or not.

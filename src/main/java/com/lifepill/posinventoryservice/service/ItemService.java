@@ -33,6 +33,8 @@ public interface ItemService {
     List<ItemGetResponseDTO> getItemByStockStatus(boolean activeStatus);
 
     SupplierItemApiResponseDTO getAllDetailsItemById(long itemId);
+
+    String deleteItem(long itemId);
  /*
   List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName);
 

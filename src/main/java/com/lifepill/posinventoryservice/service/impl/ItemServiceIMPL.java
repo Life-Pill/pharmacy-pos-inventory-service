@@ -183,6 +183,24 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    /**
+     * Deletes an item with the specified ID.
+     *
+     * @param itemId The ID of the item to be deleted.
+     * @return A message indicating the success of the delete operation.
+     * @throws NotFoundException If the item to be deleted is not found.
+     */
+    @Override
+    public String deleteItem(long itemId) {
+        if (itemRepository.existsById(itemId)) {
+            itemRepository.deleteById(itemId);
+
+            return "deleted successfully: " + itemId;
+        } else {
+            throw new NotFoundException("No item found for that id: "+ itemId);
+        }
+    }
+
     @Override
     public SupplierItemApiResponseDTO getAllDetailsItemById(long itemId) {
         Item item = itemRepository.findById(itemId)
@@ -230,6 +248,8 @@ public class ItemServiceIMPL implements ItemService {
 
         return supplierItemApiResponseDTO;
     }
+
+
 
    /* @Override
     public ItemGetResponseWithoutSupplierDetailsDTO getItemById(long itemId) {
@@ -297,25 +317,7 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
-    *//**
-     * Deletes an item with the specified ID.
-     *
-     * @param itemId The ID of the item to be deleted.
-     * @return A message indicating the success of the delete operation.
-     * @throws NotFoundException If the item to be deleted is not found.
-     *//*
-    @Override
-    public String deleteItem(long itemId) {
-        if (itemRepository.existsById(itemId)) {
-            itemRepository.deleteById(itemId);
-
-            return "deleted succesfully: " + itemId;
-        } else {
-            throw new NotFoundException("No item found for that id");
-        }
-    }
-
-    *//**
+    /**
      * Retrieves items by stock status with pagination.
      *
      * @param activeStatus The stock status to filter by.
