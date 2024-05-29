@@ -7,6 +7,7 @@ import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetAllResponseDTO;
 import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetIdResponseDTO;
 import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetResponseDTO;
+import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetResponseWithoutSupplierDetailsDTO;
 import com.lifepill.posinventoryservice.entity.Item;
 import com.lifepill.posinventoryservice.entity.ItemCategory;
 import com.lifepill.posinventoryservice.exception.EntityDuplicationException;
@@ -212,35 +213,13 @@ public class ItemServiceIMPL implements ItemService {
         ItemGetAllResponseDTO itemGetAllResponseDTO = modelMapper.map(item, ItemGetAllResponseDTO.class);
         itemGetIdResponseDTO.setItemGetAllResponseDTO(itemGetAllResponseDTO);
 
-
         // Map ItemCategory
         ItemCategory itemCategory = item.getItemCategory();
         ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
         itemGetIdResponseDTO.setItemCategoryDTO(itemCategoryDTO);
 
-        //rest template supplier
-        //TODO: need to create supplier service when given supplier id to retrieve supplier and supplier company details
-       /* ResponseEntity<SupplierAndSupplierCompanyDTO> responseEntityForSupplier =restTemplate.getForEntity(
-                "http://localhost:8082/lifepill/v1/supplier/get-supplier-with-company/"+item.getSupplierId(),
-                SupplierAndSupplierCompanyDTO.class
-                );*/
-        // SupplierAndSupplierCompanyDTO supplierAndSupplierCompanyDTO = responseEntityForSupplier.getBody();
-
-
         SupplierAndSupplierCompanyDTO supplierAndSupplierCompanyDTO =
                 apiClientSupplierService.getSupplierAndCompanyBySupplierId(item.getSupplierId());
-
-
-        //TODO: Map Supplier
-       /* Supplier supplier = item.getSupplier();
-        SupplierDTO supplierDTO = modelMapper.map(supplier, SupplierDTO.class);
-        itemGetIdResponseDTO.setSupplierDTO(supplierDTO);
-
-        // Map SupplierCompany
-        SupplierCompany supplierCompany = supplier.getSupplierCompany();
-        SupplierCompanyDTO supplierCompanyDTO = modelMapper.map(supplierCompany, SupplierCompanyDTO.class);
-        itemGetIdResponseDTO.setSupplierCompanyDTO(supplierCompanyDTO);*/
-
 
         SupplierItemApiResponseDTO supplierItemApiResponseDTO = new SupplierItemApiResponseDTO();
         supplierItemApiResponseDTO.setItemGetIdResponseDTO(itemGetIdResponseDTO);
@@ -249,10 +228,8 @@ public class ItemServiceIMPL implements ItemService {
         return supplierItemApiResponseDTO;
     }
 
-
-
-   /* @Override
-    public ItemGetResponseWithoutSupplierDetailsDTO getItemById(long itemId) {
+    @Override
+    public ItemGetResponseWithoutSupplierDetailsDTO getItemAndCategoryById(long itemId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
 
@@ -269,7 +246,10 @@ public class ItemServiceIMPL implements ItemService {
         itemGetResponsewithoutSupplierDetailsDTO.setItemCategoryDTO(itemCategoryDTO);
 
         return itemGetResponsewithoutSupplierDetailsDTO;
-    }*/
+    }
+
+
+   /* */
 
 
 /*

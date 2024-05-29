@@ -167,6 +167,28 @@ public class ItemController {
         );
     }
 
+    /**
+     * Gets item with category by id.
+     *
+     * @param itemId the item id
+     * @return the item with category by id
+     */
+    @GetMapping(path = "/get-item-with-category-details-by-id/{itemId}")
+    public ResponseEntity<StandardResponse> getItemWithCategoryById(
+            @PathVariable(value = "itemId") long itemId
+    ){
+        ItemGetResponseWithoutSupplierDetailsDTO itemGetResponsewithoutSupplierDetailsDTO =
+                itemService.getItemAndCategoryById(itemId);
+        return new ResponseEntity<>(
+                new StandardResponse(
+                        200,
+                        "Success retrieve item with category by id:" + itemId ,
+                        itemGetResponsewithoutSupplierDetailsDTO
+                ),
+                HttpStatus.OK
+        );
+    }
+
     /*
      *//**
      * Retrieves items by name and status using MapStruct.
@@ -225,18 +247,5 @@ public class ItemController {
 
 
 
-    /**
-     * Gets item with category by id.
-     *
-     * @param itemId the item id
-     * @return the item with category by id
-     *//*
-    @GetMapping(path = "/get-item-details-by-id/{id}")
-    public ResponseEntity<StandardResponse> getItemWithCategoryById(@PathVariable(value = "id") long itemId){
-        ItemGetResponseWithoutSupplierDetailsDTO itemGetResponsewithoutSupplierDetailsDTO = itemService.getItemById(itemId);
-        return new ResponseEntity<StandardResponse>(
-                new StandardResponse(200,"Success",itemGetResponsewithoutSupplierDetailsDTO),
-                HttpStatus.OK
-        );
-    }*/
+   */
 }

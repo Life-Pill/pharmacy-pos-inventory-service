@@ -35,6 +35,8 @@ public interface ItemService {
     SupplierItemApiResponseDTO getAllDetailsItemById(long itemId);
 
     String deleteItem(long itemId);
+
+    ItemGetResponseWithoutSupplierDetailsDTO getItemAndCategoryById(long itemId);
  /*
   List<ItemGetResponseDTO> getItemByNameAndStatusBymapstruct(String itemName);
 
@@ -58,7 +60,7 @@ public interface ItemService {
 
     String deleteCategory(long categoryId);
 
-    ItemGetResponseWithoutSupplierDetailsDTO getItemById(long itemId);
+
 
     */
 }
