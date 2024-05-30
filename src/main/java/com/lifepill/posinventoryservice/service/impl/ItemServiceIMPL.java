@@ -20,9 +20,12 @@ import com.lifepill.posinventoryservice.service.APIClient.APIClientSupplierServi
 import com.lifepill.posinventoryservice.service.APIClient.APIClientBranchService;
 import com.lifepill.posinventoryservice.service.ItemService;
 import com.lifepill.posinventoryservice.util.StandardResponse;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +44,8 @@ public class ItemServiceIMPL implements ItemService {
     private ItemCategoryRepository itemCategoryRepository;
     private APIClientSupplierService apiClientSupplierService;
     private APIClientBranchService apiClientBranchService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ItemServiceIMPL.class);
 
     /**
      * Saves a new item based on the provided item save request DTO.
@@ -202,8 +207,10 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    @CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getAllDetailsItemByIdFallback")
     @Override
     public SupplierItemApiResponseDTO getAllDetailsItemById(long itemId) {
+        LOGGER.info("Inside getAllDetailsItemById method of ItemServiceIMPL");
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
 
@@ -220,6 +227,49 @@ public class ItemServiceIMPL implements ItemService {
 
         SupplierAndSupplierCompanyDTO supplierAndSupplierCompanyDTO =
                 apiClientSupplierService.getSupplierAndCompanyBySupplierId(item.getSupplierId());
+
+        SupplierItemApiResponseDTO supplierItemApiResponseDTO = new SupplierItemApiResponseDTO();
+        supplierItemApiResponseDTO.setItemGetIdResponseDTO(itemGetIdResponseDTO);
+        supplierItemApiResponseDTO.setSupplierAndSupplierCompanyDTO(supplierAndSupplierCompanyDTO);
+
+        return supplierItemApiResponseDTO;
+    }
+
+    public SupplierItemApiResponseDTO getAllDetailsItemByIdFallback(long itemId, Exception exception) {
+
+        LOGGER.info("Inside getAllDetailsItemByIdFallback method of ItemServiceIMPL");
+
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
+
+        ItemGetIdResponseDTO itemGetIdResponseDTO = modelMapper.map(item, ItemGetIdResponseDTO.class);
+
+        // Map Item Get All response
+        ItemGetAllResponseDTO itemGetAllResponseDTO = modelMapper.map(item, ItemGetAllResponseDTO.class);
+        itemGetIdResponseDTO.setItemGetAllResponseDTO(itemGetAllResponseDTO);
+
+        // Map ItemCategory
+        ItemCategory itemCategory = item.getItemCategory();
+        ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
+        itemGetIdResponseDTO.setItemCategoryDTO(itemCategoryDTO);
+
+        SupplierAndSupplierCompanyDTO supplierAndSupplierCompanyDTO =
+                new SupplierAndSupplierCompanyDTO();
+
+        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyId(1L);
+        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyName("Default Name");
+        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyAddress("Default Address");
+        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyContact("Default Contact");
+        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyEmail("Default Email");
+        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyAccountNumber("Default Account Number");
+        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyDescription("Default Description");
+        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyImage("Default Image");
+        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyStatus("Default Status");
+        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyRating("Default Rating");
+
+        supplierAndSupplierCompanyDTO.getSupplierDTO().setSupplierId(1L);
+        supplierAndSupplierCompanyDTO.getSupplierDTO().setSupplierName("Default Name");
+
 
         SupplierItemApiResponseDTO supplierItemApiResponseDTO = new SupplierItemApiResponseDTO();
         supplierItemApiResponseDTO.setItemGetIdResponseDTO(itemGetIdResponseDTO);
