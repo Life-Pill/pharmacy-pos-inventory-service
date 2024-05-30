@@ -235,9 +235,10 @@ public class ItemServiceIMPL implements ItemService {
         return supplierItemApiResponseDTO;
     }
 
+    //TODO: Need to check the fallback method and need to add default values
     public SupplierItemApiResponseDTO getAllDetailsItemByIdFallback(long itemId, Exception exception) {
-
-        LOGGER.info("Inside getAllDetailsItemByIdFallback method of ItemServiceIMPL");
+        LOGGER.error("Inside getAllDetailsItemByIdFallback method of ItemServiceIMPL");
+        LOGGER.error("Exception is: ", exception);
 
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Item not found with ID: " + itemId));
@@ -253,27 +254,8 @@ public class ItemServiceIMPL implements ItemService {
         ItemCategoryDTO itemCategoryDTO = modelMapper.map(itemCategory, ItemCategoryDTO.class);
         itemGetIdResponseDTO.setItemCategoryDTO(itemCategoryDTO);
 
-        SupplierAndSupplierCompanyDTO supplierAndSupplierCompanyDTO =
-                new SupplierAndSupplierCompanyDTO();
-
-        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyId(1L);
-        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyName("Default Name");
-        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyAddress("Default Address");
-        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyContact("Default Contact");
-        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyEmail("Default Email");
-        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyAccountNumber("Default Account Number");
-        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyDescription("Default Description");
-        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyImage("Default Image");
-        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyStatus("Default Status");
-        supplierAndSupplierCompanyDTO.getSupplierCompanyDTO().setCompanyRating("Default Rating");
-
-        supplierAndSupplierCompanyDTO.getSupplierDTO().setSupplierId(1L);
-        supplierAndSupplierCompanyDTO.getSupplierDTO().setSupplierName("Default Name");
-
-
         SupplierItemApiResponseDTO supplierItemApiResponseDTO = new SupplierItemApiResponseDTO();
         supplierItemApiResponseDTO.setItemGetIdResponseDTO(itemGetIdResponseDTO);
-        supplierItemApiResponseDTO.setSupplierAndSupplierCompanyDTO(supplierAndSupplierCompanyDTO);
 
         return supplierItemApiResponseDTO;
     }
