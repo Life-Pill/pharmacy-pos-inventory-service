@@ -207,6 +207,15 @@ public class ItemServiceIMPL implements ItemService {
         }
     }
 
+    /**
+     * Retrieves all details of an item by its ID using a circuit breaker pattern.
+     * The circuit breaker pattern is used to prevent system failure and maintain system stability when calling external services.
+     * If the call to the external service fails, the circuit breaker goes into the open state and the fallback method is called.
+     *
+     * @param itemId The ID of the item whose details are to be retrieved.
+     * @return A SupplierItemApiResponseDTO object containing all details of the item.
+     * @throws NotFoundException If no item is found with the given ID.
+     */
     @CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getAllDetailsItemByIdFallback")
     @Override
     public SupplierItemApiResponseDTO getAllDetailsItemById(long itemId) {
@@ -235,6 +244,15 @@ public class ItemServiceIMPL implements ItemService {
         return supplierItemApiResponseDTO;
     }
 
+    /**
+     * Fallback method for getAllDetailsItemById.
+     * This method is called when the circuit breaker is open and the call to the external service fails.
+     * It returns a SupplierItemApiResponseDTO with default values.
+     *
+     * @param itemId The ID of the item whose details were to be retrieved.
+     * @param exception The exception that caused the circuit breaker to open.
+     * @return A SupplierItemApiResponseDTO with default values.
+     */
     //TODO: Need to check the fallback method and need to add default values
     public SupplierItemApiResponseDTO getAllDetailsItemByIdFallback(long itemId, Exception exception) {
         LOGGER.error("Inside getAllDetailsItemByIdFallback method of ItemServiceIMPL");
@@ -260,6 +278,13 @@ public class ItemServiceIMPL implements ItemService {
         return supplierItemApiResponseDTO;
     }
 
+    /**
+     * Retrieves an item and its associated category by the item's ID.
+     *
+     * @param itemId The ID of the item whose details are to be retrieved.
+     * @return An ItemGetResponseWithoutSupplierDetailsDTO object containing the item and its associated category.
+     * @throws NotFoundException If no item is found with the given ID.
+     */
     @Override
     public ItemGetResponseWithoutSupplierDetailsDTO getItemAndCategoryById(long itemId) {
         Item item = itemRepository.findById(itemId)
