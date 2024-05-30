@@ -1,6 +1,11 @@
 spring:
   application:
     name: INVENTORY-SERVICE
+    
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/inventory-service
+    username: postgres
 
   config:
     import: optional:configserver:http://localhost:8888
@@ -11,42 +16,12 @@ spring:
     username: guest
     password: guest
 
+  security:
+    user:
+      name: lifepill
+
 management:
   endpoints:
     web:
       exposure:
         include: "*"
-
-#Actuator endpoints for Prometheus
-
-
-  tracing:
-    sampling:
-      probability: 1.0
-      #Actuator endpoints for Circuit Breaker
-  health:
-    circuitbreakers:
-      enabled: true
-    endpoints:
-      web:
-        exposure:
-          include: health
-    endpoint:
-      health:
-        show-details: always
-
-#Circular Breaker Resilience4j Configuration
-
-resilience4j:
-  circuitbreaker:
-    instances:
-      INVENTORY-SERVICE:
-        registerHealthIndicator: true
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 5
-        automaticTransitionFromOpenToHalfOpenEnabled: true
-        waitDurationInOpenState: 5s
-        permittedNumberOfCallsInHalfOpenState: 3
-        slidingWindowSize: 10
-        slidingWindowType: count_based
-
