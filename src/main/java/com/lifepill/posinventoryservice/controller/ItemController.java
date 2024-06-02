@@ -1,6 +1,7 @@
 package com.lifepill.posinventoryservice.controller;
 
 import com.lifepill.posinventoryservice.dto.ApiResponseDTO.SupplierItemApiResponseDTO;
+import com.lifepill.posinventoryservice.dto.ItemQuantityDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemUpdateDTO;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -242,5 +244,38 @@ public class ItemController {
             );
         }
     }
+
+    /**
+     * Reduces the quantity of a list of items in the stock.
+     *
+     * @param items A list of items with their IDs and quantities to be reduced.
+     * @return ResponseEntity containing a StandardResponse object with a success message if the operation is successful, error message otherwise.
+     */
+    @PostMapping(path = "/update-item-quantities")
+    public ResponseEntity<StandardResponse> reduceItemQuantities(
+            @RequestBody List<ItemQuantityDTO> items
+    ) {
+        try {
+            itemService.updateItemQuantities(items);
+            return new ResponseEntity<>(
+                    new StandardResponse(
+                            200,
+                            "Item quantities update successfully",
+                            items
+                    ),
+                    HttpStatus.OK
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(
+                    new StandardResponse(
+                            500,
+                            "An error occurred while reducing item quantities",
+                            e.getMessage()
+                    ),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
 
 }

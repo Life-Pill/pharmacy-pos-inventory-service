@@ -2,6 +2,7 @@ package com.lifepill.posinventoryservice.service;
 
 import com.lifepill.posinventoryservice.dto.ApiResponseDTO.SupplierItemApiResponseDTO;
 import com.lifepill.posinventoryservice.dto.ItemCategoryDTO;
+import com.lifepill.posinventoryservice.dto.ItemQuantityDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemUpdateDTO;
@@ -10,6 +11,7 @@ import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetResponseDTO;
 import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetResponseWithoutSupplierDetailsDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ItemService {
 
@@ -42,4 +44,6 @@ public interface ItemService {
     String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO);
 
     boolean checkItemExistsAndQuantityAvailable(long itemId, int requiredQuantity);
+
+    void updateItemQuantities(List<ItemQuantityDTO> items);
 }

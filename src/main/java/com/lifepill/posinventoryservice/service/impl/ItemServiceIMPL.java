@@ -2,6 +2,7 @@ package com.lifepill.posinventoryservice.service.impl;
 
 import com.lifepill.posinventoryservice.dto.ApiResponseDTO.SupplierItemApiResponseDTO;
 import com.lifepill.posinventoryservice.dto.ItemCategoryDTO;
+import com.lifepill.posinventoryservice.dto.ItemQuantityDTO;
 import com.lifepill.posinventoryservice.dto.SupplierAndSupplierCompanyDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestCategoryDTO;
 import com.lifepill.posinventoryservice.dto.requestDTO.ItemSaveRequestDTO;
@@ -30,10 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -525,6 +523,35 @@ public class ItemServiceIMPL implements ItemService {
             }
         } else {
             throw new NotFoundException("Item not found with ID: " + itemId);
+        }
+    }
+
+    /**
+     * Reduces the quantity of a list of items in the stock.
+     *
+     * @param items A list of items with their IDs and quantities to be reduced.
+     * @throws NotFoundException if an item in the list is not found in the database.
+     * @throws InsufficientItemQuantityException if an item in the list does not have enough quantity.
+     */
+    @Override
+    public void updateItemQuantities(List<ItemQuantityDTO> items) {
+        for (ItemQuantityDTO item : items) {
+            long itemId = item.getItemId();
+            double quantityToReduce = item.getItemQuantity();
+            Optional<Item> optionalItem = itemRepository.findById(itemId);
+            if (optionalItem.isPresent()) {
+                Item itemInStock = optionalItem.get();
+                if (itemInStock.getItemQuantity() >= quantityToReduce) {
+                    itemInStock.setItemQuantity(itemInStock.getItemQuantity() - quantityToReduce);
+                    itemRepository.save(itemInStock);
+                } else {
+                    throw new InsufficientItemQuantityException(
+                            "Insufficient quantity for item with ID: " + itemId
+                    );
+                }
+            } else {
+                throw new NotFoundException("Item not found with ID: " + itemId);
+            }
         }
     }
 
