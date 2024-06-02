@@ -208,4 +208,39 @@ public class ItemController {
                 HttpStatus.OK
         );
     }
+
+    /**
+     * Checks if an item exists by their ID and if the required quantity is available in stock.
+     *
+     * @param itemId The ID of the item to check.
+     * @param requiredQuantity The required quantity of the item.
+     * @return ResponseEntity containing a StandardResponse object with a success message if the item exists and the required quantity is available, error message otherwise.
+     */
+    @GetMapping(path = "/check-item-stock/{itemId}/{requiredQuantity}")
+    public ResponseEntity<StandardResponse> checkItemExistsAndQuantityAvailable(
+            @PathVariable(value = "itemId") long itemId,
+            @PathVariable(value = "requiredQuantity") int requiredQuantity
+    ) {
+        boolean isAvailable = itemService.checkItemExistsAndQuantityAvailable(itemId, requiredQuantity);
+        if (isAvailable) {
+            return new ResponseEntity<>(
+                    new StandardResponse(
+                            200,
+                            "Item exists and required quantity is available",
+                            true
+                    ),
+                    HttpStatus.OK
+            );
+        } else {
+            return new ResponseEntity<>(
+                    new StandardResponse(
+                            404,
+                            "Item does not exist or required quantity is not available",
+                            false
+                    ),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
 }

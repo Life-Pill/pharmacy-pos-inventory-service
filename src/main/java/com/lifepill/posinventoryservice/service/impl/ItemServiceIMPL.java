@@ -13,6 +13,7 @@ import com.lifepill.posinventoryservice.dto.responseDTO.ItemGetResponseWithoutSu
 import com.lifepill.posinventoryservice.entity.Item;
 import com.lifepill.posinventoryservice.entity.ItemCategory;
 import com.lifepill.posinventoryservice.exception.EntityDuplicationException;
+import com.lifepill.posinventoryservice.exception.InsufficientItemQuantityException;
 import com.lifepill.posinventoryservice.exception.NotFoundException;
 import com.lifepill.posinventoryservice.repository.ItemCategoryRepository;
 import com.lifepill.posinventoryservice.repository.ItemRepository;
@@ -498,6 +499,32 @@ public class ItemServiceIMPL implements ItemService {
             return "Category deleted successfully";
         } else {
             throw new NotFoundException("Category not found");
+        }
+    }
+
+    /**
+     * Checks if an item exists by their ID and if the required quantity is available in stock.
+     *
+     * @param itemId The ID of the item to check.
+     * @param requiredQuantity The required quantity of the item.
+     * @return true if the item exists and the required quantity is available, false otherwise.
+     * @throws NotFoundException if the item is not found.
+     * @throws InsufficientItemQuantityException if the required quantity is not available.
+     */
+    public boolean checkItemExistsAndQuantityAvailable(long itemId, int requiredQuantity) {
+        Optional<Item> optionalItem = itemRepository.findById(itemId);
+        if (optionalItem.isPresent()) {
+            Item item = optionalItem.get();
+            if (item.getItemQuantity() >= requiredQuantity) {
+                return true;
+            } else {
+                throw new InsufficientItemQuantityException(
+                        "Item " + item.getItemId()
+                                + " does not have enough quantity"
+                );
+            }
+        } else {
+            throw new NotFoundException("Item not found with ID: " + itemId);
         }
     }
 
