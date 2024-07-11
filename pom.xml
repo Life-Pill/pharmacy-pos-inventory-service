@@ -179,7 +179,7 @@
                     </to>
                     <container>
                         <ports>
-                            <port>9191</port>
+                            <port>8085</port>
                         </ports>
                     </container>
                 </configuration>
