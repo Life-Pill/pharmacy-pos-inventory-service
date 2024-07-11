@@ -57,7 +57,7 @@ public class ItemController {
     public ResponseEntity<StandardResponse> saveItem(@RequestBody ItemSaveRequestDTO itemSaveRequestDTO) {
         String message = itemService.saveItems(itemSaveRequestDTO);
 
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(201, message, itemSaveRequestDTO),
                 HttpStatus.CREATED);
     }
@@ -129,7 +129,7 @@ public class ItemController {
             @RequestParam(value = "activeStatus") boolean activeStatus) {
         List<ItemGetResponseDTO> itemDTOS = itemService.getItemByStockStatus(activeStatus);
 
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(200,
                         "Success", itemDTOS),
                 HttpStatus.OK);
@@ -143,7 +143,7 @@ public class ItemController {
     @GetMapping(path = "/get-item-all-details-by-id/{itemId}")
     public ResponseEntity<StandardResponse> getItemAllDetailsById(@PathVariable(value = "itemId") long itemId){
         SupplierItemApiResponseDTO supplierItemApiResponseDTO = itemService.getAllDetailsItemById(itemId);
-        return new ResponseEntity<StandardResponse>(
+        return new ResponseEntity<>(
                 new StandardResponse(200,"Success",supplierItemApiResponseDTO),
                 HttpStatus.OK
         );
@@ -221,7 +221,7 @@ public class ItemController {
     @GetMapping(path = "/check-item-stock/{itemId}/{requiredQuantity}")
     public ResponseEntity<StandardResponse> checkItemExistsAndQuantityAvailable(
             @PathVariable(value = "itemId") long itemId,
-            @PathVariable(value = "requiredQuantity") int requiredQuantity
+            @PathVariable(value = "requiredQuantity") double requiredQuantity
     ) {
         boolean isAvailable = itemService.checkItemExistsAndQuantityAvailable(itemId, requiredQuantity);
         if (isAvailable) {
@@ -252,7 +252,7 @@ public class ItemController {
      * @return ResponseEntity containing a StandardResponse object with a success message if the operation is successful, error message otherwise.
      */
     @PostMapping(path = "/update-item-quantities")
-    public ResponseEntity<StandardResponse> reduceItemQuantities(
+    public ResponseEntity<StandardResponse> updateItemQuantities(
             @RequestBody List<ItemQuantityDTO> items
     ) {
         try {

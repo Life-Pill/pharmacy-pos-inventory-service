@@ -43,7 +43,7 @@ public interface ItemService {
 
     String saveItemWithCategory(ItemSaveRequestCategoryDTO itemSaveRequestCategoryDTO);
 
-    boolean checkItemExistsAndQuantityAvailable(long itemId, int requiredQuantity);
+    boolean checkItemExistsAndQuantityAvailable(long itemId, double requiredQuantity);
 
     void updateItemQuantities(List<ItemQuantityDTO> items);
 }

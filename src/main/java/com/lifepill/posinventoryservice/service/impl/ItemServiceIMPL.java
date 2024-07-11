@@ -252,7 +252,6 @@ public class ItemServiceIMPL implements ItemService {
      * @param exception The exception that caused the circuit breaker to open.
      * @return A SupplierItemApiResponseDTO with default values.
      */
-    //TODO: Need to check the fallback method and need to add default values
     public SupplierItemApiResponseDTO getAllDetailsItemByIdFallback(long itemId, Exception exception) {
         LOGGER.error("Inside getAllDetailsItemByIdFallback method of ItemServiceIMPL");
         LOGGER.error("Exception is: ", exception);
@@ -509,7 +508,7 @@ public class ItemServiceIMPL implements ItemService {
      * @throws NotFoundException if the item is not found.
      * @throws InsufficientItemQuantityException if the required quantity is not available.
      */
-    public boolean checkItemExistsAndQuantityAvailable(long itemId, int requiredQuantity) {
+    public boolean checkItemExistsAndQuantityAvailable(long itemId, double requiredQuantity) {
         Optional<Item> optionalItem = itemRepository.findById(itemId);
         if (optionalItem.isPresent()) {
             Item item = optionalItem.get();
